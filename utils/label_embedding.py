@@ -11,8 +11,9 @@ class LabelOneHotEmbedding(nn.Module):
         self.ksize = ksize
         eye = np.identity(3, dtype=np.float32)
         zero = np.zeros(3, dtype=np.float32)
+        mask = np.array([float('-inf') for x in range(self.n_out)], dtype=np.float32)
         self.onehot = defaultdict(lambda: np.ones(3, dtype=np.float32)/3,
-                {'.': eye[0], '(': eye[1], ')': eye[2], '0': zero})
+                {'.': eye[0], '(': eye[1], ')': eye[2], '0': zero, '#': zero})
 
     def encode(self, seq):
         seq = [ self.onehot[s] for s in seq ]
@@ -40,7 +41,7 @@ class BinLabelOneHotEmbedding(nn.Module):
         eye = np.identity(2, dtype=np.float32)
         zero = np.zeros(2, dtype=np.float32)
         self.onehot = defaultdict(lambda: np.ones(2, dtype=np.float32)/2,
-                {'.': eye[0], '(': eye[1], ')': eye[1], '0': eye[1]})
+                {'.': eye[0], '(': eye[1], ')': eye[1], '0': zero})
 
     def encode(self, seq):
         seq = [ self.onehot[s] for s in seq ]

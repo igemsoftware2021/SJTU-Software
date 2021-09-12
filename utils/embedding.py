@@ -13,9 +13,10 @@ class OneHotEmbedding(nn.Module):
         self.ksize = ksize
         eye = np.identity(4, dtype=np.float32)
         zero = np.zeros(4, dtype=np.float32)
+        mask = np.array([float('-inf') for x in range(self.n_out)], dtype=np.float32)
         self.onehot = defaultdict(lambda: np.ones(4, dtype=np.float32)/4, 
                 {'a': eye[0], 'c': eye[1], 'g': eye[2], 't': eye[3], 'u': eye[3], 
-                    '0': zero})
+                    '0': zero, '#': zero})
 
     def encode(self, seq):
         seq = [ self.onehot[s] for s in seq.lower() ]

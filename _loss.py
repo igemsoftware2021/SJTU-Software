@@ -4,9 +4,11 @@ import torch.nn.functional as F
 from sklearn.metrics import f1_score
 import numpy as np
 
+
 def f1_loss(pred_a, true_a):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     pred_a  = -(F.relu(-pred_a+1)-1)
+    # print("\n\npred:\n",torch.argmax(pred_a,dim=2).shape, torch.argmax(pred_a,dim=2))
 
     true_a = true_a.unsqueeze(1)
     unfold = nn.Unfold(kernel_size=(3, 3), padding=1)
@@ -15,17 +17,19 @@ def f1_loss(pred_a, true_a):
     true_a_tmp = true_a_tmp.transpose(1, 2).matmul(w.view(w.size(0), -1)).transpose(1, 2)
     true_a = true_a_tmp.view(true_a.shape)
     true_a = true_a.squeeze(1)
+    # print("\n\ntrue:\n",torch.argmax(true_a,dim=2).shape, torch.argmax(true_a,dim=2))
 
     tp = pred_a*true_a
     tp = torch.sum(tp, (1,2))
 
-    fp = pred_a*(1-true_a)
+    fp = pred_a*(1-true_a)     #fn
     fp = torch.sum(fp, (1,2))
 
-    fn = (1-pred_a)*true_a
+    fn = (1-pred_a)*true_a   #fp
     fn = torch.sum(fn, (1,2))
 
     f1 = torch.div(2*tp, (2*tp + fp + fn))
+
     return 1-f1.mean()
 
 
@@ -34,7 +38,7 @@ def TagLoss(input, output):
     input = input.to(device)
     output = output.to(device)
     Crossloss = nn.CrossEntropyLoss()
-    total_loss = torch.zeros(1).to(device)
+    total_loss = torch.tensor(0, dtype=torch.float32).to(device)
     for i in range(input.shape[0]):
         pred = input[i]
         target = output[i]
@@ -63,7 +67,7 @@ def Tag_F1_loss(pred, label):
     label = label.to(device)
     total_f1 = torch.zeros((1), requires_grad=True).to(device)
     for i in range(pred.shape[0]):
-        f1 = torch.from_numpy(np.array(f1_score(pred[i].detach().cpu(), label[i].detach().cpu(), average='weighted')))
+        f1 = torch.from_numpy(np.array(f1_score(label[i].detach().cpu(), pred[i].detach().cpu(), average='weighted')))
         f1 = f1.to(device)
         total_f1 = total_f1 + f1
 
@@ -87,6 +91,6 @@ def Tag_F1_loss(pred, label):
         #
         # total_f1 = total_f1 + f1
 
-        total_f1 = total_f1 / pred.shape[0]
+    total_f1 = total_f1 / pred.shape[0]
 
     return 1-total_f1/pred.shape[0]
