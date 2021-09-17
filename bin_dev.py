@@ -11,17 +11,17 @@ import matplotlib.pyplot as plt
 
 # model
 from model.attention_model import *
-from sklearn.metrics import f1_score, precision_score, cohen_kappa_score, classification_report
+from sklearn.metrics import f1_score, precision_score, cohen_kappa_score
 import warnings
-
 warnings.filterwarnings("ignore")
 
 # Hyper-Parameters
 batch_size = 1
 lr = 0.0005
-global_length = 500
+global_length = 100
 n_epoch = 1
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 
 # Definition of Embedding Function
 Embedder = OneHotEmbedding(4)
@@ -29,49 +29,39 @@ LabelEmbedder = BinLabelOneHotEmbedding(2)
 position = PositionalEncoding(8, global_length)
 
 # Definition of model
-model_bs = 128
-AttentionLayer = MODELI(8, 1, 1, 1, model_bs, 0.25, global_length)
+model_bs = 256
+AttentionLayer = MODELA(8, 1, 1, 1, model_bs, 0.25, global_length)
 AttentionLayer = AttentionLayer.to(device)
 # Load model with dict
-param_load_model = torch.load("./Model_I10.9358125329017639.pth", map_location='cuda')
+param_load_model = torch.load("./Model_A20.8810546398162842.pth", map_location='cuda')
 AttentionLayer.load_state_dict(param_load_model)
 
 # Create dataset
-devSet = IntelDNADataset('./full_data/bpRNA_dataset', './full_data/adj_dataset_full',
-                         './full_data/node2vec_dataset_full', global_length, 'dev')
+devSet = IntelDNADataset('./data/data_v2', './data/adj_dataset', './data/vec_dataset', global_length, 'dev')
 dev_dataloader = DataLoader(devSet, batch_size=batch_size, shuffle=True, drop_last=True)
 
 # Step to record
 dev_step = 0
 
 # Create base dict
-src_vocab = {'A': 0, 'T': 1, 'C': 2, 'G': 3, 'U': 1, '#': 4, 'R': 4, 'Y': 4, 'M': 4, 'K': 4, 'S': 4, 'W': 4, 'B': 4,
-             'V': 4, 'D': 4, 'N': 4, 'I': 4}
+src_vocab = {'A': 0, 'T': 1, 'C': 2, 'G': 3, 'U': 1, '#': 4, 'S': 5, 'N': 6, 'R': 7, 'D': 8, 'Y': 9}
 
 total_acc = []
-min_acc = 99
+min_acc = 0
 total_f1 = []
 total_presion = []
 total_rog = []
 cohen_score = []
 
-
 def list2average(list):
+
     sum = 0
 
     for item in list:
+
         sum += item
 
-    return sum / len(list)
-
-def class2nota(x):
-    if x == 0:
-        return '.'
-    if x == 1:
-        return '('
-    if x == 2:
-        return ')'
-
+    return sum/len(list)
 
 # Main Epoch
 for epoch in range(n_epoch):
@@ -87,9 +77,7 @@ for epoch in range(n_epoch):
         dev_acc = 0
 
         # Load data
-        bp, label, adj, vec, name = data
-
-        bp = [x.upper() for x in bp]
+        bp, label, adj, vec = data
 
         # Data aligning
         align_bp, align_label = bp_align(bp, label, batch_size, max_len=global_length)
@@ -155,14 +143,12 @@ for epoch in range(n_epoch):
             index_out = index_out.to(device)
 
             # target_names = ['class 0', 'class 1', 'class 2']
-            #
+
             # print(classification_report(encode_label_index[0].detach().cpu().tolist(), index_out[0].detach().cpu().tolist(), target_names=target_names))
 
-            f1 = f1_score(encode_label_index[0].detach().cpu().tolist(), index_out[0].detach().cpu().tolist(),
-                          average='micro')
+            f1 = f1_score(encode_label_index[0].detach().cpu().tolist(), index_out[0].detach().cpu().tolist(), average='weighted')
 
-            precison = precision_score(encode_label_index[0].detach().cpu().tolist(),
-                                       index_out[0].detach().cpu().tolist(), average='micro')
+            precison = precision_score(encode_label_index[0].detach().cpu().tolist(), index_out[0].detach().cpu().tolist(), average='weighted')
 
             # rog = roc_auc_score(encode_label_index[0].detach().cpu().tolist(), index_out[0].detach().cpu().tolist(), average='weighted', multi_class='ovr')
 
@@ -170,10 +156,7 @@ for epoch in range(n_epoch):
 
             acc = acc.detach().cpu().tolist()
 
-            pred = [class2nota(x) for x in index_out[0]]
-
-            cohen_score.append(
-                cohen_kappa_score(encode_label_index[0].detach().cpu().tolist(), index_out[0].detach().cpu().tolist()))
+            cohen_score.append(cohen_kappa_score(encode_label_index[0].detach().cpu().tolist(), index_out[0].detach().cpu().tolist()))
 
             if acc < min_acc:
                 min_acc = acc
@@ -184,26 +167,30 @@ for epoch in range(n_epoch):
             total_presion.append(precison)
 
             # print('Acc:{}'.format(acc))
-            # print('Label {}'.format(align_label[0]))
-            # print('Pred {}'.format(pred))
             # print('F1:{}'.format(f1))
             # print('Presion:{}'.format(precison))
-
+            # print('Rog:{}'.format(rog))
 
     print('Min_acc: {}'.format(min_acc))
     print('Total Acc:{}'.format(list2average(total_acc)))
     print('Total F1:{}'.format(list2average(total_f1)))
     print('Total Presion:{}'.format(list2average(total_presion)))
+    print('cohen_scores:{}'.format(list2average(cohen_score)))
     # print('Total Rog:{}'.format(list2average(total_rog)))
 
-    plt.title('Acc')
+    plt.title('Bin Acc')
     plt.boxplot(total_acc)
     plt.show()
 
-    plt.title('Precision')
+    plt.title('Bin Precision')
     plt.boxplot(total_presion)
     plt.show()
 
-    plt.title('F1')
+    plt.title('Bin F1')
     plt.boxplot(total_f1)
     plt.show()
+
+    plt.title('Bin cohen_scores')
+    plt.boxplot(cohen_score)
+    plt.show()
+

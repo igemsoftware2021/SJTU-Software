@@ -75,12 +75,19 @@ class IntelDNADataset(Dataset):
 
         with open(self.bp_name) as f:
             lines = f.readlines()
-            seq = lines[3]
+            start_line = 0
+            for i in range(len(lines)):
+                if lines[i].find('#') != -1:
+                    continue
+                else:
+                    start_line = i
+                    break
+            seq = lines[start_line]
             seq = seq.rstrip('\n')
-            result = lines[4]
+            result = lines[start_line + 1]
             result = result.rstrip('\n')
 
-        return seq, result, file2matrix(self.adj_name, self.length), file2vec(self.vec_name)
+        return seq, result, file2matrix(self.adj_name, self.length), file2vec(self.vec_name), self.bp_name
 
     def __len__(self):
         return len(self.data_list)

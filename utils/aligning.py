@@ -1,7 +1,7 @@
 def bp_align(seq, target, size, max_len=150):
 
-    seq_blank = 'A'
-    label_blank = '.'
+    seq_blank = '#'
+    label_blank = '#'
 
     # for i in range(size):
     #     if len(seq[i]) > max_len:
