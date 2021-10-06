@@ -1,0 +1,201 @@
+@font-face {
+    font-family: intro;
+    src: url(../fonts/TravelingTypewriter-nRRqY.ttf);
+}
+
+@font-face {
+    font-family: zelda;
+    src: url(../fonts/ZELDA\ Regular.ttf);
+}
+
+.navbar-brand {
+    position: relative;
+    top: 5px;
+    font-family: zelda;
+    height: 50px;
+
+    font-size: 30px;
+    color: rgb(219, 219, 216) !important;
+}
+
+
+a:hover {
+    text-decoration: none;
+}
+
+li {
+    list-style-type: none;
+}
+
+
+
+.empty-row {
+    height: 100px;
+    width: auto;
+}
+
+/* 
+.contain-left-bar {
+    
+} */
+
+.left-bar {
+    position: fixed;
+    left: 0px;
+    top: 200px;
+    width: 100px !important;
+    padding: 0px;
+
+}
+
+.left-bar li {
+    font-size: 18px;
+    padding-right: 10px;
+    width: 150px;
+    height: 50px;
+    line-height: 50px;
+    text-align: right;
+
+    /* border-top-right-radius: 10%;
+    border-bottom-right-radius: 10%; */
+    border-right: silver solid 2px;
+    transition: 1s;
+}
+
+.left-bar li a {
+    color: rgb(15, 15, 15);
+}
+
+/* .left-bar li:hover{
+    background-color: rgba(15,15,15,0.5);
+} */
+
+.left-bar li:hover a {
+    color: rgb(4, 73, 47);
+}
+
+.navbar {
+    padding-top: 0px;
+    /* background-color: rgb(245, 250, 216); */
+}
+
+.nav {
+    width: 70%;
+    border: none;
+
+}
+
+.navibutton {
+    width: 20%;
+    text-align: center;
+
+}
+
+.list>li {
+    width: 100%;
+
+    padding-top: 8px;
+    /* calculate */
+    text-align: center;
+    /* background-color: rgba(240, 240, 240, 0.3); */
+    background-color: rgba(15, 15, 15, 0.5);
+
+
+}
+
+.nav li a {
+    display: block;
+    font-size: 18px !important;
+    /* calculate */
+    height: 100%;
+    color: whitesmoke;
+    font-family: intro;
+    border: none !important;
+    transition: 0.5s;
+}
+
+.nav li a:hover {
+    text-decoration: none !important;
+    background-color: rgba(15, 15, 15, 0.5);
+    border: none !important;
+
+    color: thistle !important;
+}
+
+.nav .list {
+    width: 100%;
+    position: absolute;
+    overflow: hidden;
+    top: 45px;
+    right: 1px;
+    padding: 0;
+    height: 0px;
+    /* height: 130px; */
+
+    transition: 1.5s ease;
+    /* border-radius: 0 0 10% 10%; */
+
+}
+
+.nav>li:hover .list {
+    height: 260px;
+    /*to be calculated */
+
+    /* border: #fff solid 1px; */
+}
+
+.last-li {
+    padding-bottom: 10px;
+    /* calculate */
+}
+
+.navibutton {
+    margin: 5px 0 1px 0;
+}
+
+#introducing {
+    font-size: 30px;
+    color: darkcyan;
+    position: relative;
+    bottom: 60px;
+}
+
+#part1 {
+    position: relative;
+    height: 80px;
+}
+
+.abstract-title {
+    position: absolute;
+    right: 0;
+    padding-left: 80px;
+    height: 120px;
+    width: 70%;
+    background: linear-gradient(115deg, transparent 58px, black 0) top left;
+    font-family: zelda;
+    color: whitesmoke;
+    font-size: 60px;
+}
+
+#abstract>.abstract-empty {
+    background: linear-gradient(115deg, transparent 21px, rgba(155, 155, 155, 0.5) 0) top left;
+    height: 50px;
+}
+
+#abstract>.abstract-content {
+    padding-bottom: 20px;
+    background-color: rgba(155, 155, 155, 0.5);
+    font-size: 20px;
+    line-height: 1.5;
+}
+
+.modal-four {
+    height: 250px;
+    background-image: linear-gradient(135deg, rgb(161, 235, 253), rgba(255, 0, 0, 0));
+
+    border-radius: 10%;
+    box-shadow: 2px 2px 5px rgb(143, 142, 142);
+    font-size: 30px;
+    font-family: intro;
+    padding-top: 30px;
+}
