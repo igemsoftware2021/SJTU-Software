@@ -1,0 +1,3 @@
+/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/CMakeFiles/LinearPartition.dir

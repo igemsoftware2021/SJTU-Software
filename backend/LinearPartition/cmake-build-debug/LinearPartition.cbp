@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="LinearPartition"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="LinearPartition">
+				<Option output="/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/LinearPartition" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/lizz02/university/summer_sopho/backend/LinearPartition/src"/>
+					<Add directory="/home/lizz02/university/summer_sopho/backend/LinearPartition/src/Utils"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 LinearPartition"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="LinearPartition/fast">
+				<Option output="/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/LinearPartition" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/lizz02/university/summer_sopho/backend/LinearPartition/src"/>
+					<Add directory="/home/lizz02/university/summer_sopho/backend/LinearPartition/src/Utils"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 LinearPartition/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/lizz02/university/summer_sopho/backend/LinearPartition/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/lizz02/university/summer_sopho/backend/LinearPartition/src/LinearPartition.cpp">
+			<Option target="LinearPartition"/>
+		</Unit>
+		<Unit filename="/home/lizz02/university/summer_sopho/backend/LinearPartition/src/LinearPartition.h">
+			<Option target="LinearPartition"/>
+		</Unit>
+		<Unit filename="/home/lizz02/university/summer_sopho/backend/LinearPartition/src/Utils/energy_parameter.h">
+			<Option target="LinearPartition"/>
+		</Unit>
+		<Unit filename="/home/lizz02/university/summer_sopho/backend/LinearPartition/src/Utils/feature_weight.h">
+			<Option target="LinearPartition"/>
+		</Unit>
+		<Unit filename="/home/lizz02/university/summer_sopho/backend/LinearPartition/src/Utils/intl11.h">
+			<Option target="LinearPartition"/>
+		</Unit>
+		<Unit filename="/home/lizz02/university/summer_sopho/backend/LinearPartition/src/Utils/intl21.h">
+			<Option target="LinearPartition"/>
+		</Unit>
+		<Unit filename="/home/lizz02/university/summer_sopho/backend/LinearPartition/src/Utils/intl22.h">
+			<Option target="LinearPartition"/>
+		</Unit>
+		<Unit filename="/home/lizz02/university/summer_sopho/backend/LinearPartition/src/Utils/utility.h">
+			<Option target="LinearPartition"/>
+		</Unit>
+		<Unit filename="/home/lizz02/university/summer_sopho/backend/LinearPartition/src/Utils/utility_v.h">
+			<Option target="LinearPartition"/>
+		</Unit>
+		<Unit filename="/home/lizz02/university/summer_sopho/backend/LinearPartition/src/bpp.cpp">
+			<Option target="LinearPartition"/>
+		</Unit>
+		<Unit filename="/home/lizz02/university/summer_sopho/backend/LinearPartition/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

@@ -1,0 +1,266 @@
+import codecs
+
+import numpy as np
+import networkx as nx
+from gensim.models import Word2Vec
+import random
+import os
+
+# Parses the node2vec arguments.
+
+dimensions = 4
+walk_length = 80
+num_walks = 10
+window_size = 10
+iter = 1
+workers = 32
+p = 1
+q = 1
+weighted = False
+directed = False
+
+
+class Graph():
+    def __init__(self, G, is_directed, p, q):
+        self.G = G
+        self.is_directed = is_directed
+        self.p = p
+        self.q = q
+
+    def node2vec_walk(self, walk_length, start_node):
+        '''
+        Simulate a random walk starting from start node.
+        '''
+        G = self.G
+        alias_nodes = self.alias_nodes
+        alias_edges = self.alias_edges
+
+        walk = [start_node]
+
+        while len(walk) < walk_length:
+            cur = walk[-1]
+            cur_nbrs = sorted(G.neighbors(cur))
+            if len(cur_nbrs) > 0:
+                if len(walk) == 1:
+                    walk.append(cur_nbrs[alias_draw(alias_nodes[cur][0], alias_nodes[cur][1])])
+                else:
+                    prev = walk[-2]
+                    next = cur_nbrs[alias_draw(alias_edges[(prev, cur)][0],
+                                               alias_edges[(prev, cur)][1])]
+                    walk.append(next)
+            else:
+                break
+
+        return walk
+
+    def simulate_walks(self, num_walks, walk_length):
+        '''
+        Repeatedly simulate random walks from each node.
+        '''
+        G = self.G
+        walks = []
+        nodes = list(G.nodes())
+        # print('Walk iteration:')
+        for walk_iter in range(num_walks):
+            # print(str(walk_iter + 1), '/', str(num_walks))
+            random.shuffle(nodes)
+            for node in nodes:
+                walks.append(self.node2vec_walk(walk_length=walk_length, start_node=node))
+
+        return walks
+
+    def get_alias_edge(self, src, dst):
+        '''
+        Get the alias edge setup lists for a given edge.
+        '''
+        G = self.G
+        p = self.p
+        q = self.q
+
+        unnormalized_probs = []
+        for dst_nbr in sorted(G.neighbors(dst)):
+            if dst_nbr == src:
+                unnormalized_probs.append(G[dst][dst_nbr]['weight'] / p)
+            elif G.has_edge(dst_nbr, src):
+                unnormalized_probs.append(G[dst][dst_nbr]['weight'])
+            else:
+                unnormalized_probs.append(G[dst][dst_nbr]['weight'] / q)
+        norm_const = sum(unnormalized_probs)
+        normalized_probs = [float(u_prob) / norm_const for u_prob in unnormalized_probs]
+
+        return alias_setup(normalized_probs)
+
+    def preprocess_transition_probs(self):
+        '''
+        Preprocessing of transition probabilities for guiding the random walks.
+        '''
+        G = self.G
+        is_directed = self.is_directed
+
+        alias_nodes = {}
+        for node in G.nodes():
+            unnormalized_probs = [G[node][nbr]['weight'] for nbr in sorted(G.neighbors(node))]
+            norm_const = sum(unnormalized_probs)
+            normalized_probs = [float(u_prob) / norm_const for u_prob in unnormalized_probs]
+            alias_nodes[node] = alias_setup(normalized_probs)
+
+        alias_edges = {}
+        triads = {}
+
+        if is_directed:
+            for edge in G.edges():
+                alias_edges[edge] = self.get_alias_edge(edge[0], edge[1])
+        else:
+            for edge in G.edges():
+                alias_edges[edge] = self.get_alias_edge(edge[0], edge[1])
+                alias_edges[(edge[1], edge[0])] = self.get_alias_edge(edge[1], edge[0])
+
+        self.alias_nodes = alias_nodes
+        self.alias_edges = alias_edges
+
+        return
+
+
+def alias_setup(probs):
+    '''
+    Compute utility lists for non-uniform sampling from discrete distributions.
+    Refer to https://hips.seas.harvard.edu/blog/2013/03/03/the-alias-method-efficient-sampling-with-many-discrete-outcomes/
+    for details
+    '''
+    K = len(probs)
+    q = np.zeros(K)
+    J = np.zeros(K, dtype=int)
+
+    smaller = []
+    larger = []
+    for kk, prob in enumerate(probs):
+        q[kk] = K * prob
+        if q[kk] < 1.0:
+            smaller.append(kk)
+        else:
+            larger.append(kk)
+
+    while len(smaller) > 0 and len(larger) > 0:
+        small = smaller.pop()
+        large = larger.pop()
+
+        J[small] = large
+        q[large] = q[large] + q[small] - 1.0
+        if q[large] < 1.0:
+            smaller.append(large)
+        else:
+            larger.append(large)
+
+    return J, q
+
+
+def alias_draw(J, q):
+    '''
+    Draw sample from a non-uniform discrete distribution using alias sampling.
+    '''
+    K = len(J)
+
+    kk = int(np.floor(np.random.rand() * K))
+    if np.random.rand() < q[kk]:
+        return kk
+    else:
+        return J[kk]
+
+
+def read_graph(adj):
+    '''
+    Reads the input network in networkx.
+    '''
+    G = nx.Graph(adj)
+    G = G.to_undirected()
+
+    return G
+
+
+def learn_embeddings(walks, length, dimensions):
+    '''
+    Learn embeddings by optimizing the Skipgram objective using SGD.
+    '''
+    walks = [list(map(str, walk)) for walk in walks]
+    model = Word2Vec(walks, size=dimensions, window=window_size, min_count=0, sg=1, workers=workers,
+                     iter=iter)
+    # model.wv.save_word2vec_format(output)
+    vocab = model.wv.vocab
+    word_vector = np.zeros((length, dimensions))
+    for word in vocab:
+        word_vector[int(word)] = model.wv.__getitem__(word)
+    return word_vector
+
+
+def node2vector(adj, length, dimensions):
+    '''
+    Pipeline for representational learning for all nodes in a graph.
+    '''
+    G = read_graph(adj)
+    G = Graph(G, directed, p, q)
+    G.preprocess_transition_probs()
+    walks = G.simulate_walks(num_walks, walk_length)
+    word_vector = learn_embeddings(walks, length, dimensions)
+    return word_vector
+
+
+def file2matrix(filename, length):
+    mat = np.zeros((length, length))
+    with open(filename, 'r') as fp:
+        a = fp.readlines()
+        for item in a:
+            b = item.split()
+            if (len(b) != 0):
+                i = int(b[0]) - 1
+                j = int(b[1]) - 1
+                num = float(b[2])
+                mat[i][j] = num
+    return mat
+
+
+def file2vec(filename):
+    vec = np.load(filename)
+    return vec
+
+
+def getVecs(length, dimensions):
+    adj_path = './adj_dataset_full'
+    vec_path = 'node2vec_dataset_test'
+    dirs = os.listdir(adj_path)
+
+    for dir in dirs:
+        # 读取出一个目录
+        adjdir_path = os.path.join(adj_path, dir)
+        vecdir_path = os.path.join(vec_path, dir)
+        files = os.listdir(adjdir_path)
+        item = 0
+
+        for file in files:
+            # 读取出一个文件中的邻接矩阵
+            adjfile = os.path.join(adjdir_path, file)
+            adj = file2matrix(adjfile, length)
+
+            # 获取vec
+            vecs = np.zeros((10, length, dimensions))
+            for i in range(10):
+                vecs[i] = node2vector(adj, length, dimensions)
+                vec = vecs.mean(axis=0)
+
+            # 保存vec
+            vecfile = os.path.join(vecdir_path, file)
+            np.save(vecfile, vec)
+            item += 1
+            print("ok{}:{}".format(dir, item))
+
+
+def main():
+    global_length = 500
+    print('start')
+    getVecs(global_length, dimensions)
+    print('finished!')
+    # a=np.load('bpRNA_SRP_852.st.npy')
+    # print(a.shape)
+
+
+if __name__ == "__main__":
+    main()
