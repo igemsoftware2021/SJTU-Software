@@ -115,25 +115,8 @@ class IntelDNADataset(Dataset):
             result = lines[start_line + 1]
             result = result.rstrip('\n')
 
-            model = word2vec.Word2Vec(seq, window=16, size=self.encode_size)
 
-            Code_A = model.__getitem__("A")
-            Code_U = model.__getitem__("U")
-            Code_C = model.__getitem__("C")
-            Code_G = model.__getitem__("G")
-
-            zero = np.zeros(self.encode_size, dtype=np.float32)
-            self.onehot = defaultdict(lambda: np.ones(self.ksize, dtype=np.float32) / self.ksize,
-                                      {'A': Code_A, 'C': Code_C, 'G': Code_G, 'T': Code_U, 'U': Code_U,
-                                       'R': zero, '#': zero, 'Y': zero, 'M': zero, 'K': zero, 'S': zero, 'W': zero,
-                                       'B': zero, 'V': zero, 'D': zero, 'N': zero})
-
-            encode_seq = [self.onehot[s] for s in seq.upper()]
-            encode_seq = np.vstack(encode_seq)
-            encode_seq.transpose(encode_seq)
-
-
-        return seq, encode_seq, result, file2matrix(self.adj_name, self.length), lengths
+        return seq, result, file2matrix(self.adj_name, self.length), file2vec(self.vec_name)
 
     def __len__(self):
         return len(self.data_list)

@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from model.attention_model import *
 from sklearn.metrics import f1_score, precision_score
 import warnings
+import seaborn as sns
 
 warnings.filterwarnings("ignore")
 
@@ -29,10 +30,10 @@ position = PositionalEncoding(8, global_length)
 
 # Definition of model
 model_bs = 128
-AttentionLayer = MODELI(8, 1, 1, 1, model_bs, 0.25, global_length)
+AttentionLayer = MODELH(8, 1, 1, 1, model_bs, 0.2, global_length)
 AttentionLayer = AttentionLayer.to(device)
 # Load model with dict
-param_load_model = torch.load("./Model_I10.9358125329017639.pth", map_location='cuda')
+param_load_model = torch.load("./Model_H210.9325156807899475.pth", map_location='cuda')
 AttentionLayer.load_state_dict(param_load_model)
 
 # Create dataset
@@ -92,7 +93,7 @@ for epoch in range(n_epoch):
         dev_acc = 0
 
         # Load data
-        bp, label, adj, vec, name = data
+        bp, label, adj, vec = data
 
         bp = [x.upper() for x in bp]
 
@@ -168,10 +169,10 @@ for epoch in range(n_epoch):
             # print(classification_report(encode_label_index[0].detach().cpu().tolist(), index_out[0].detach().cpu().tolist(), target_names=target_names))
 
             f1 = f1_score(encode_label_index[0].detach().cpu().tolist(), index_out.detach().cpu().tolist(),
-                          average='micro')
+                          average='weighted')
             #
             precison = precision_score(encode_label_index[0].detach().cpu().tolist(),
-                                        index_out.detach().cpu().tolist(), average='micro')
+                                        index_out.detach().cpu().tolist(), average='macro')
 
             # rog = roc_auc_score(encode_label_index[0].detach().cpu().tolist(), index_out[0].detach().cpu().tolist(), average='weighted', multi_class='ovr')
 
@@ -196,7 +197,6 @@ for epoch in range(n_epoch):
 
             print('Acc:{}'.format(acc))
             print('Label {}'.format(label[0]))
-            print('Pred ', ''.join(pred))
             print('F1:{}'.format(f1))
             print('Presion:{}'.format(precison))
 
@@ -207,13 +207,31 @@ for epoch in range(n_epoch):
     print('Total Presion:{}'.format(list2average(total_presion)))
     # print('Total Rog:{}'.format(list2average(total_rog)))
 
+    f = open('ModelV1/ModelACC.record', 'w+')
+    for i in range(len(total_acc)):
+        f.write(str(total_acc[i]))
+        f.write(',')
+    f.close()
+
+    f = open('ModelV1/ModelF1.record', 'w+')
+    for i in range(len(total_acc)):
+        f.write(str(total_f1[i]))
+        f.write(',')
+    f.close()
+
+    f = open('ModelV1/ModelPresion.record', 'w+')
+    for i in range(len(total_acc)):
+        f.write(str(total_presion[i]))
+        f.write(',')
+    f.close()
+
     plt.title('Acc')
     plt.boxplot(total_acc)
     plt.show()
 
-    # plt.title('Precision')
-    # plt.boxplot(total_presion)
-    # plt.show()
+    plt.title('Precision')
+    plt.boxplot(total_presion)
+    plt.show()
     #
     plt.title('F1')
     plt.boxplot(total_f1)
