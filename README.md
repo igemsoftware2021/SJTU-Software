@@ -22,7 +22,7 @@ cuda == 10.2
 
 ### How to use ?
 
-Original codes are uploaded here. We don't suggest you to run this directly, which will be complicated.
+Original codes are uploaded here.
 
 Please visit our website: http://www.sjtufold.com
 
