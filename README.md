@@ -28,6 +28,12 @@ Please visit our website: http://www.sjtufold.com
 
 An user-friendliness WebApp is developed.
 
+### Performance
+
+Comparison between various secondary structure prediction model (<=150bp).
+
+[![4rh0-Q-model-comparison.png](https://i.postimg.cc/13xcSyCZ/4rh0-Q-model-comparison.png)](https://postimg.cc/3dBDCQQL) 
+
 ### Core team
 
 * Data Analysis -> [Gufeng Yu](https://github.com/GufengYu520)
